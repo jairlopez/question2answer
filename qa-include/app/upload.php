@@ -150,7 +150,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 	if ($isimage && qa_has_gd_image()) {
 		$image = @imagecreatefromstring($content);
 
-		if (is_resource($image)) {
+		if (is_resource($image) || $image instanceof \GdImage) {
 			$result['width'] = $width = imagesx($image);
 			$result['height'] = $height = imagesy($image);
 
@@ -162,7 +162,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 				)) {
 					qa_gd_image_resize($image, $width, $height);
 
-					if (is_resource($image)) {
+					if (is_resource($image) || $image instanceof \GdImage) {
 						$content = qa_gd_image_jpeg($image);
 						$result['format'] = $format = 'jpg';
 						$result['width'] = $width;
@@ -171,7 +171,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 				}
 			}
 
-			if (is_resource($image)) // might have been lost
+			if (is_resource($image) || $image instanceof \GdImage) // might have been lost
 				imagedestroy($image);
 		}
 	}
